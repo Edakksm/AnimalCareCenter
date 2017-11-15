@@ -1,13 +1,30 @@
 
 <html>
+ <head>
   <style>
     body{ 
       font-size: 15pt;
       font-family: arial;
     }
   </style>
-
-
+<script>
+      function validate()
+      {
+        var amount = document.forms["Billing"]["amount"].value;
+        var error = "";
+        if(amount  == "")
+          error = "***Please enter value for Quantity***";
+        if(amount != "" && isNan(amount))
+            error = "***Please enter a numeric value for Quantity***";
+        if(error  != ""){
+           var w = window.open("","Please input a value","width=200, height=100, top=300, left=300");
+           w.document.write(error )
+           return false;
+         }
+        return true;
+      }
+    </script>
+</head>
 <body>
   <h1>Invoice Information</h1>
 
@@ -36,7 +53,7 @@
 
  <h2>Add Billing</h2>
   
-<form method="POST" action="/billing">
+<form method="POST" action="/billing" name="Billing">
 <table>
   <tr>
     <td><input type="text" name="amount" maxlength="5"></td>
@@ -48,7 +65,7 @@
 <br>
 <input type="hidden" name="appointmentid" value="{{request.args.get('id') }}"></input>
 <input type="submit" value="Add Invoice"></p>
-<a href="/">Back</a>
+<!--<a href="/">Back</a>-->
 
 </form>
    <p class="error"><strong>Error:</strong>{{ request.args.get('error') }}

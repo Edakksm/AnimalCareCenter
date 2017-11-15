@@ -178,17 +178,18 @@ def another():
 @app.route('/SearchCustomer', methods=['GET','POST'])
 def SearchCustomer():
   if(request.method == 'GET'):
-     print("hello")
      return render_template('SearchCustomer.html')
   else:
-    print('hello')
     phone = request.form['phone']
     cursor = g.conn.execute("SELECT customerid,firstname, lastname, phone,email, street, city, state, country, zipcode FROM customer where phone=%s", phone)
     customer = []
     for result in cursor:
       customer.append(result)  # can also be accessed using result[0]
     cursor.close()
-    context = dict(data = names)
+    if not customer:
+       print("no")
+       return render_template('SearchCustomer.html', error="No customer with that phone number")
+    context = dict(data = customer)
     return render_template('SearchCustomer.html', **context)
 
 
@@ -371,8 +372,11 @@ def appointments():
       d = datetime.datetime(year=int(year), month=int(month), day=int(day))
       dt = datetime.datetime.combine(d, t)
       petid = request.form['petid']
+      print(petid)
       cursor = g.conn.execute('insert into appointment(petid, physicianid, nurseid, appointmentdate) values(%s, %s, %s, %s)', petid, physicianid, nurseid, dt)
     except Exception as e:
+      if('appointment_ux' in e.orig.args[0]):
+          return redirect(url_for('appointments', id=petid, error="Appointment already taken"))
       print(e)
     r = '/appointments?id='
     r = r + petid

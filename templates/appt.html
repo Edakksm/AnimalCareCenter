@@ -126,11 +126,11 @@ Nurse Name:
 <br>
 <input type="hidden" name="petid" value="{{request.args.get('id') }}"></input>
 <input type="submit" value="Add"></p>
-<a href="/">Back</a>
+<!--<a href="/">Back</a>-->
 
 </form>
 
-
+  <p class="error"><strong>Error:</strong>{{ request.args.get('error') }}
 
 </body>
 

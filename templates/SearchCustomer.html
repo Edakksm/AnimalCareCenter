@@ -1,18 +1,44 @@
 <html>
+<head>
   <style>
     body{ 
       font-size: 15pt;
       font-family: arial;
     }
   </style>
-
+<script>
+      function validate()
+      {
+        var phone = document.forms["Search"]["phone"].value;
+        var error = "";
+        if(phone  == "")
+          error = "***Please enter value for Phone***";
+        if(phone !="" && isNaN(phone))
+          error =error   +  "***Please enter numeric value for Phone***";
+         if(error  != ""){
+           var w = window.open("","Please input a value","width=200, height=100, top=300, left=300");
+           w.document.write(error );
+           return false;
+         }
+         return true;
+      }
+    </script>
 
 <body>
-  <form action="/" method="post" name="Index">
+  <form  action="/SearchCustomer" method="POST" name="Search">
   <h1>Welcome Admin</h1>
-  
-  <p><a href="/SearchCustomer">Search Customer</a></p>
-  <div>
+   <table>
+     <tr>
+        <td>Phone Number</td>
+        <td><input type="text" name="phone"></td>
+        <td><input type="submit" name="Search" value="Search" onclick="return validate();"></td>
+     </tr>
+       {% if error %}
+         <p class="error"><strong>Error:</strong>{{error}}
+      {% endif %}
+   </table>
+ 
+   <div>
     <table border="1">
        <tr>
         <td><b>CustomerID</b></td>
@@ -42,11 +68,12 @@
          <td>{{n.country}}</td>
          <td>{{n.zipcode}}</td>
          <td><a href="{{ '/pets?id='+n.customerid|string }}">{{n.customerid}}</a></td>
-         
+        
     </tr>
     {% endfor %}
    </table>
   </div>
+
 
 <p><a href="/addCustomer">Add Customer</a></p>
 
