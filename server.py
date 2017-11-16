@@ -217,7 +217,9 @@ def addCustomer():
        g.conn.execute("INSERT INTO customer(firstname, lastname, phone, email, street, city, state, country, zipcode) VALUES(%s, %s, %s, %s,%s,%s,%s,%s, %s)", (firstname,lastname,phone,email,street,city,state, country,zipcode))
     except Exception as e:
        if("customer_phone_key" in e.orig.args[0]):
-          return render_template('addCustomer.html', error="Phone number already taken")
+          return render_template('addCustomer.html', error="Phone number already present")
+       elif("customer_email_key" in e.orig.args[0]):
+           return render_template('addCustomer.html', error="Email Address already present")
        else:
         pass
     finally:
