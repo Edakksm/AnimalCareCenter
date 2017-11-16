@@ -399,18 +399,20 @@ def billing():
     print(appointmentid)
     if(amount == ' '):
       error = "Please enter the invoice amount"
-      return render_template(url_for("/billing", id=appointmentid), error = error)
+     # return render_template('billing.html', error=error)
+      return redirect(url_for("billing", id=appointmentid, error = error))
     if(amount != ' ' and not amount.isdigit()):
       error = "Please enter a numeric invoice amount"
-      return render_template(url_for("billing.html", id=appointmentid), error = error)
+     # return render_template('billing.html', error=error)
+      return redirect(url_for("billing", id=appointmentid, error = error))
    
     try:
      cursor = g.conn.execute('insert into invoice (appointmentid, amount, dategenerated, servicetype) values(%s, %s, %s, %s)', appointmentid, amount, datetime.datetime.now(), 'HospitalService')
     except Exception as e:
       print(e)
     # print(e.orig.args[0])
-   #  if("Appt_ID_UX" in e.orig.args[0]):
-      return redirect(url_for("billing", id=appointmentid, error = "Invoice already added"))
+      if("Appt_ID_UX" in e.orig.args[0]):
+        return redirect(url_for("billing", id=appointmentid, error = "Invoice already added"))
     returl = '/billing?id='
     returl = returl + appointmentid
     return redirect(returl)
